@@ -1,5 +1,7 @@
 use solutions::*;
-fn main() {s1c4_single_threaded();}
+fn main() {
+    s1c6();
+}
 
 pub mod solutions {
     use crate::*;
@@ -26,7 +28,7 @@ pub mod solutions {
 
         let bytes1 = s2b::hex_2_b(&input1[..]);
         let bytes2 = s2b::hex_2_b(&input2[..]);
-        let out_bytes = manip_helper::xor_all(&bytes1, &bytes2);
+        let out_bytes = common::xor_all(&bytes1, &bytes2);
         for b in &out_bytes {
             println!("{}", b);
         }
@@ -43,9 +45,9 @@ pub mod solutions {
         for line in file.split("\n") {
             let line_decoded = s2b::hex_2_b(line);
             for i in 0..=255u8 {
-                let line_xored = manip_helper::xor_one_2_string(&line_decoded, &i);
-                let score = manip_helper::english_checker(&line_xored);
-                if score > max_score{
+                let line_xored = common::xor_one_2_string(&line_decoded, &i);
+                let score = common::english_checker(&line_xored);
+                if score > max_score {
                     max_score = score;
                     max_score_index = scores.len();
                 }
@@ -54,6 +56,39 @@ pub mod solutions {
             }
         }
         println!("{}", strings[max_score_index]);
+    }
+
+    pub fn s1c5() {
+        println!("Enter string to encode: ");
+        let string = input();
+        println!("Enter encryption key: ");
+        let key = input();
+        let bytes = common::repeating_key_xor(&string[..], &key[..]);
+        let out = b2s::b_2_hex(&bytes);
+        println!("{}", out);
+    }
+
+    pub fn s1c6() {
+        let file = fs::read_to_string("s1c6.txt").expect("Couldn't read s1c6.txt");
+        println!("Enter a test keysize: ");
+        //get list of best hamming vals in a vec (roughly)
+        let mut best_vals = vec![(0u64, u64::MAX)]; // (best keysize, best edit dist) at end of vec
+        for keysize in 2..=40 {
+            let s1 = &file[..keysize];
+            let s2 = &file[keysize..2 * keysize];
+            let dist = common::hamming_distance(s1, s2) / keysize as u64; // normalized edit/hamming distance between string chunks
+            if dist
+                < best_vals
+                    .last()
+                    .expect("bad best hamming value keysizes vec")
+                    .1
+            {
+                best_vals.push((keysize as u64, dist));
+            }
+        }
+        let best_keysize = best_vals.last().expect("no best keysize").0;
+
+        println!("best keysize: {:?}", best_keysize);
     }
 }
 
@@ -73,13 +108,13 @@ pub mod s2b {
 }
 
 pub mod b2s {
-    use crate::manip_helper;
+    use crate::common;
     // 6 bits per hex digit
     // no overflow
     pub fn b_2_b64(bytes: &Vec<u8>) -> String {
         let mut ret = String::new();
         //take bytes in chunks of 3 to turn into 4 digits of Base64
-        let b64_bytes = manip_helper::rechunk(64, bytes);
+        let b64_bytes = common::rechunk(64, bytes);
         for byte in b64_bytes {
             ret.push(match byte {
                 0..=25 => byte + b'A',
@@ -106,7 +141,7 @@ pub mod b2s {
         ret
     }
 }
-pub mod manip_helper {
+pub mod common {
     pub fn rechunk(base: u32, bytes: &Vec<u8>) -> Vec<u8> {
         let mut ret: Vec<u8> = Vec::new();
         let bpd = f32::log2(base as f32) as u8; //bits per digit
@@ -187,8 +222,8 @@ pub mod manip_helper {
     // scores a string based on how likely it is to be language, may be changed later
     pub fn english_checker(string: &String) -> i64 {
         let mut ret = 0;
-        for char in string.chars(){
-            ret += match char{
+        for char in string.chars() {
+            ret += match char {
                 ' ' => 10,
                 'e' => 8,
                 't' => 7,
@@ -198,7 +233,36 @@ pub mod manip_helper {
                 'n' | 's' | 'h' | 'r' => 5,
                 'a'..='z' => 4,
                 '0'..='9' | ',' | '.' | '!' | '?' => 3,
-                _ => 0
+                _ => 0,
+            }
+        }
+        ret
+    }
+
+    pub fn repeating_key_xor(string: &str, key: &str) -> Vec<u8> {
+        let mut ret = Vec::new();
+        let key_bytes = key.as_bytes();
+        for (i, val) in string.bytes().enumerate() {
+            let key_letter: u8 = key_bytes[i % key.len()];
+            let xored_letter = val ^ key_letter;
+            ret.push(xored_letter);
+        }
+        ret
+    }
+
+    pub fn hamming_distance(s1: &str, s2: &str) -> u64 {
+        let mut ret: u64 = 0;
+        let mask = 1;
+        assert_eq!(s1.len(), s2.len());
+        let b1 = s1.as_bytes();
+        let b2 = s2.as_bytes();
+        for i in 0..b1.len() {
+            let mut a = b1[i].clone();
+            let mut b = b2[i].clone();
+            for j in 0..8 {
+                ret += ((a & mask) ^ (b & mask)) as u64;
+                a >>= 1;
+                b >>= 1;
             }
         }
         ret
