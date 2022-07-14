@@ -1,4 +1,3 @@
-
 use crate::common;
 pub fn crack_single_key_xor(bytes: &Vec<u8>) -> (u8, Vec<u8>) {
     let decoded_bytes = Vec::new();

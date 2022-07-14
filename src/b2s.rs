@@ -1,4 +1,3 @@
-
 use crate::common;
 // 6 bits per hex digit
 // no overflow
@@ -24,8 +23,8 @@ pub fn b_2_b64(bytes: &Vec<u8>) -> String {
 pub fn b_2_hex(bytes: &Vec<u8>) -> String {
     let mut ret = String::new();
     for byte in bytes {
-        let dr = crate::b2d::d2hex(&(byte & 0xf));
-        let dl = crate::b2d::d2hex(&(byte >> 4));
+        let dr = common::d2hex(&(byte & 0xf));
+        let dl = common::d2hex(&(byte >> 4));
         ret.push(dl as char);
         ret.push(dr as char);
     }

@@ -1,47 +1,58 @@
 use solutions::*;
+use std::collections::HashSet;
 mod b2s;
 mod common;
 mod cracking;
+mod decrypt;
 mod s2b;
 
+
 fn main() {
-    s1c7();
+    s2c9();
 }
 
 pub mod solutions {
     use crate::*;
-    use aes::cipher::{
-        generic_array::GenericArray, BlockCipher, BlockDecrypt, BlockEncrypt, KeyInit,
-    };
-    use aes::Aes128;
     use common::input;
     use std::fs;
 
+
+    pub fn s2c9(){
+
+        let string = input().trim().to_owned();
+        let length = input().trim().parse::<usize>().expect("please input a valid usize");
+        let output = common::pkcs7_pad("", length);
+        println!("output string: {:?}", output);
+    }
+
+    pub fn s1c8(){
+        let file = fs::read_to_string("s1c8.hex").expect("couldn't read file");
+        let hex = file.lines();
+        let mut most_likely_line = String::new();
+        let mut most_repeats = 0;
+        for (i, line) in hex.enumerate(){
+            let bytes = s2b::hex2b(line);
+            let sets: Vec<_> = bytes.chunks_exact(16).collect();
+            let unique_sets: HashSet<_> = sets.iter().cloned().collect();
+            let repeats = sets.len() - unique_sets.len();
+            if repeats > most_repeats{
+                most_repeats = repeats;
+                most_likely_line = line.to_string();
+            }
+        }
+        println!("{}", most_likely_line);
+
+    }
+
     pub fn s1c7() {
-        // let file = fs::read("s1c7.raw").expect("couldn't read file");
-        let file = fs::read_to_string("s1c7.b64").expect("couldn't read file");
-        let file = file.replace("\n", "");
-        let file = file.as_bytes();
+        let file = fs::read("s1c7.raw").expect("couldn't read file");
+        // let file = fs::read_to_string("s1c7.b64").expect("couldn't read file");
+        // let file = file.replace("\n", "");
+        // let file = file.as_bytes().to_owned();
         let key_str = "YELLOW SUBMARINE";
-        let key = GenericArray::clone_from_slice(key_str.as_bytes());
 
-
-        // pub fn decrypt_message(path: &str, key_str: &str) -> String {
-        //     let base64_bytes = read_bytes(path);
-        //     let key = GenericArray::clone_from_slice(key_str.as_bytes());
-
-        //     // Construct blocks of 16 byte size for AES-128
-        //     let mut blocks = Vec::new();
-        //     (0..base64_bytes.len()).step_by(16).for_each(|x| {
-        //         blocks.push(GenericArray::clone_from_slice(&base64_bytes[x..x + 16]));
-        //     });
-
-        //     // Initialize cipher
-        //     let cipher = Aes128::new(&key);
-        //     cipher.decrypt_blocks(&mut blocks);
-
-        //     blocks.iter().flatten().map(|&x| x as char).collect()
-        // }
+        let output = decrypt::aes_ecb(&file, key_str);
+        println!("{}", output);
     }
 
     pub fn s1c6() {
