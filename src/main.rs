@@ -8,7 +8,8 @@ mod s2b;
 
 
 fn main() {
-    s2c9();
+    // s2c10();
+    s1c6();
 }
 
 pub mod solutions {
@@ -16,12 +17,16 @@ pub mod solutions {
     use common::input;
     use std::fs;
 
+    pub fn s2c10(){
+        let _b64f = fs::read_to_string("s2c10.b64").unwrap();
+        let rawf = fs::read("s2c10.raw").unwrap();
+    }
 
     pub fn s2c9(){
 
         let string = input().trim().to_owned();
         let length = input().trim().parse::<usize>().expect("please input a valid usize");
-        let output = common::pkcs7_pad("", length);
+        let output = common::pkcs7_pad(string.as_str(), length);
         println!("output string: {:?}", output);
     }
 

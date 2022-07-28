@@ -7,9 +7,11 @@ pub fn input() -> String {
     ret.trim().to_owned()
 }
 pub fn pkcs7_pad(input: &str, length: usize) -> String{
-    let mut ret = String::from(input);
+    let mut ret = input.to_string();
+    println!("input: {}", ret);
     let input_len = input.len();
     let len_dif = length - input_len;
+    println!("{}", len_dif);
     let additive = "\x04".repeat(len_dif);
     ret.push_str(&additive);
     ret

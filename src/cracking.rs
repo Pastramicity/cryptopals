@@ -16,6 +16,7 @@ pub fn crack_single_key_xor(bytes: &Vec<u8>) -> (u8, Vec<u8>) {
     }
     (best_decoder_byte, decoded_bytes)
 }
+
 pub fn crack_repeating_key_xor_from_raw(filename: &str) {
     let rawfile = std::fs::read_to_string(filename).expect("Couldn't read file");
     let b = rawfile.as_bytes().to_vec();
