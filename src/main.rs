@@ -16,8 +16,8 @@ pub mod solutions {
     use std::fs;
 
     pub fn s2c10() {
-        let _b64f = fs::read_to_string("s2c10.b64").unwrap();
-        let rawf = fs::read("s2c10.raw").unwrap();
+        let _b64f = fs::read_to_string("res/s2c10.b64").unwrap();
+        let rawf = fs::read("res/s2c10.raw").unwrap();
     }
 
     pub fn s2c9() {
@@ -31,7 +31,7 @@ pub mod solutions {
     }
 
     pub fn s1c8() {
-        let file = fs::read_to_string("s1c8.hex").expect("couldn't read file");
+        let file = fs::read_to_string("res/s1c8.hex").expect("couldn't read file");
         let hex = file.lines();
         let mut most_likely_line = String::new();
         let mut most_repeats = 0;
@@ -49,7 +49,7 @@ pub mod solutions {
     }
 
     pub fn s1c7() {
-        let file = fs::read("s1c7.raw").expect("couldn't read file");
+        let file = fs::read("res/s1c7.raw").expect("couldn't read file");
         let key_str = "YELLOW SUBMARINE";
 
         let output = decrypt::aes_ecb(&file, key_str);
@@ -70,7 +70,7 @@ pub mod solutions {
     }
 
     pub fn s1c4_single_threaded() {
-        let file = fs::read_to_string("s1c4.txt").expect("Couldn't read s1c4.txt");
+        let file = fs::read_to_string("res/s1c4.txt").expect("Couldn't read s1c4.txt");
         let mut strings = Vec::new();
         let mut scores = Vec::new();
         let mut max_score = 0;
