@@ -9,7 +9,6 @@ mod s2b;
 
 fn main() {
     // s2c10();
-    s1c6();
 }
 
 pub mod solutions {

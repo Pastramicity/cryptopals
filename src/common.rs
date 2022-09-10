@@ -6,6 +6,7 @@ pub fn input() -> String {
         .expect("clean input string.");
     ret.trim().to_owned()
 }
+
 pub fn pkcs7_pad(input: &str, length: usize) -> String{
     let mut ret = input.to_string();
     println!("input: {}", ret);
@@ -16,6 +17,7 @@ pub fn pkcs7_pad(input: &str, length: usize) -> String{
     ret.push_str(&additive);
     ret
 }
+
 pub fn hex2d(ch: &u8) -> u8 {
     match ch {
         b'0'..=b'9' => ch - b'0',
