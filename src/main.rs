@@ -50,9 +50,6 @@ pub mod solutions {
 
     pub fn s1c7() {
         let file = fs::read("s1c7.raw").expect("couldn't read file");
-        // let file = fs::read_to_string("s1c7.b64").expect("couldn't read file");
-        // let file = file.replace("\n", "");
-        // let file = file.as_bytes().to_owned();
         let key_str = "YELLOW SUBMARINE";
 
         let output = decrypt::aes_ecb(&file, key_str);
