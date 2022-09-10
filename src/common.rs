@@ -1,4 +1,3 @@
-
 pub fn input() -> String {
     let mut ret = String::new();
     std::io::stdin()
@@ -7,7 +6,7 @@ pub fn input() -> String {
     ret.trim().to_owned()
 }
 
-pub fn pkcs7_pad(input: &str, length: usize) -> String{
+pub fn pkcs7_pad(input: &str, length: usize) -> String {
     let mut ret = input.to_string();
     println!("input: {}", ret);
     let input_len = input.len();

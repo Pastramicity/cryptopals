@@ -1,7 +1,5 @@
 pub fn aes_ecb(bytes: &Vec<u8>, key_str: &str) -> String {
-    use aes::cipher::{
-        generic_array::GenericArray, BlockDecrypt,  KeyInit,
-    };
+    use aes::cipher::{generic_array::GenericArray, BlockDecrypt, KeyInit};
     use aes::Aes128;
 
     let ret;

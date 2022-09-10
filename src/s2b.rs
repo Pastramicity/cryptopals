@@ -17,6 +17,4 @@ pub fn b642b(b64: &str) -> Vec<u8> {
     base64::decode(b64).expect("bad base64")
 }
 
-
 //shouldn't be here, maybe fix later/figure out how sub modules work lol
-

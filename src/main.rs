@@ -6,7 +6,6 @@ mod cracking;
 mod decrypt;
 mod s2b;
 
-
 fn main() {
     // s2c10();
 }
@@ -16,36 +15,37 @@ pub mod solutions {
     use common::input;
     use std::fs;
 
-    pub fn s2c10(){
+    pub fn s2c10() {
         let _b64f = fs::read_to_string("s2c10.b64").unwrap();
         let rawf = fs::read("s2c10.raw").unwrap();
     }
 
-    pub fn s2c9(){
-
+    pub fn s2c9() {
         let string = input().trim().to_owned();
-        let length = input().trim().parse::<usize>().expect("please input a valid usize");
+        let length = input()
+            .trim()
+            .parse::<usize>()
+            .expect("please input a valid usize");
         let output = common::pkcs7_pad(string.as_str(), length);
         println!("output string: {:?}", output);
     }
 
-    pub fn s1c8(){
+    pub fn s1c8() {
         let file = fs::read_to_string("s1c8.hex").expect("couldn't read file");
         let hex = file.lines();
         let mut most_likely_line = String::new();
         let mut most_repeats = 0;
-        for (i, line) in hex.enumerate(){
+        for (i, line) in hex.enumerate() {
             let bytes = s2b::hex2b(line);
             let sets: Vec<_> = bytes.chunks_exact(16).collect();
             let unique_sets: HashSet<_> = sets.iter().cloned().collect();
             let repeats = sets.len() - unique_sets.len();
-            if repeats > most_repeats{
+            if repeats > most_repeats {
                 most_repeats = repeats;
                 most_likely_line = line.to_string();
             }
         }
         println!("{}", most_likely_line);
-
     }
 
     pub fn s1c7() {
@@ -68,6 +68,7 @@ pub mod solutions {
         let out = b2s::b_2_hex(&bytes);
         println!("{}", out);
     }
+
     pub fn s1c4_single_threaded() {
         let file = fs::read_to_string("s1c4.txt").expect("Couldn't read s1c4.txt");
         let mut strings = Vec::new();
